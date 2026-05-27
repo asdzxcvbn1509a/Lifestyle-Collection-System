@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between gap-3">
+      <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">สวัสดี, {user?.displayName || user?.username}</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">จัดการคอลเลกชันไลฟ์สไตล์ของคุณ</p>
