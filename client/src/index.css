@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-600;
+  }
+  .btn-ghost {
+    @apply btn text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white shadow-sm hover:bg-red-700;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-500 dark:focus:ring-brand-500/25;
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300;
+  }
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900;
+  }
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-card;
+  }
+  .chip {
+    @apply inline-flex w-fit items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-400;
+  }
+  .field-error {
+    @apply mt-1 text-xs text-red-600 dark:text-red-400;
+  }
+  .animate-modal {
+    @apply animate-scaleIn;
+  }
+}

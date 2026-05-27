@@ -1,0 +1,69 @@
+// Lifestyle Collection System — data model
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled (pgbouncer, port 6543) — runtime
+  directUrl = env("DIRECT_URL") // direct (port 5432) — migrations
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  username     String     @unique
+  passwordHash String
+  displayName  String?
+  avatarUrl    String?
+  avatarPublicId String?  // Cloudinary public_id, used to delete the asset on replace
+  role         Role       @default(USER)
+  createdAt    DateTime   @default(now())
+  categories   Category[]
+  items        Item[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  detail    String?  @db.Text
+  icon      String? // lucide icon name chosen in the IconPicker (wireframe)
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   Int
+  items     Item[]
+  createdAt DateTime @default(now())
+
+  @@index([ownerId])
+}
+
+model Item {
+  id         Int      @id @default(autoincrement())
+  name       String
+  detail     String?  @db.Text
+  imageUrl   String?
+  imagePublicId String? // Cloudinary public_id, used to delete the asset on replace/remove
+  rating     Int? // star/score shown on the card (the "5" in the wireframe)
+  isFavorite Boolean  @default(false)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([categoryId])
+}
+
+model SystemSetting {
+  key       String   @id // e.g. siteName, allowRegistration, maintenanceMode
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
