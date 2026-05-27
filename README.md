@@ -1,48 +1,48 @@
 # Lifestyle Collection System
 
-เว็บแอปแบบ full-stack สำหรับเก็บ "คอลเลกชันไลฟ์สไตล์" — ผู้ใช้สร้าง **หมวดหมู่ (Category)** เก็บ **ไอเทม (Item)** ติด **รายการโปรด (Favorite)** ค้นหา ดูสถิติ และมี **ผู้ดูแลระบบ (Admin)** จัดการผู้ใช้/ตั้งค่าระบบ ครอบคลุม Use Case UC-01 ถึง UC-10
+A full-stack web app for keeping a "lifestyle collection" — users create **Categories**, store **Items**, mark **Favorites**, search, view stats, and an **Admin** manages users / system settings. Covers Use Cases UC-01 through UC-10.
 
 ## Tech stack
-| ส่วน | เทคโนโลยี |
+| Part | Technology |
 |---|---|
 | Frontend | React 18, Vite 5, JavaScript, Tailwind CSS 3, React Router 6, TanStack Query 5, React Hook Form, Recharts, lucide-react, sonner |
 | Backend | Node.js, Express 5, Prisma 6, JWT (jsonwebtoken), bcryptjs, Zod 4, multer, Cloudinary |
 | Database | PostgreSQL (Supabase) |
 | Image storage | Cloudinary |
 
-## Use Case → ฟีเจอร์
-| UC | ชื่อ | ที่อยู่ |
+## Use Case → feature
+| UC | Name | Where |
 |---|---|---|
-| UC-01 | สมัครสมาชิก | หน้า `/register`, `POST /api/auth/register` |
-| UC-02 | เข้าสู่ระบบ | หน้า `/login`, `POST /api/auth/login` (JWT) |
-| UC-03 | จัดการโปรไฟล์ | หน้า `/profile`, `PUT /api/users/me`, `/me/password` |
-| UC-04 | บันทึกข้อมูล (เพิ่มหมวด/ไอเทม) | Home + Category page, `POST /api/categories`, `/items` |
-| UC-05 | แก้ไขข้อมูล | ปุ่มแก้ไขในการ์ด, `PUT /api/categories/:id`, `/items/:id` |
-| UC-06 | ลบข้อมูล | ปุ่มลบ + ยืนยัน, `DELETE /api/categories/:id`, `/items/:id` |
-| UC-07 | ค้นหา | ช่องค้นหา navbar + ในหมวด, `GET /api/items?q=` |
-| UC-08 | ดูสถิติ | หน้า `/stats` (กราฟ Recharts), `GET /api/stats` |
-| UC-09 | จัดการผู้ใช้ (admin) | หน้า `/admin/users`, `GET/POST/PUT/DELETE /api/admin/users` |
-| UC-10 | จัดการระบบ (admin) | หน้า `/admin/settings`, `GET/PUT /api/admin/settings` |
-| (เพิ่ม) | รายการโปรด | หน้า `/favorites`, `PATCH /api/items/:id/favorite` |
+| UC-01 | Register | `/register` page, `POST /api/auth/register` |
+| UC-02 | Login | `/login` page, `POST /api/auth/login` (JWT) |
+| UC-03 | Manage profile | `/profile` page, `PUT /api/users/me`, `/me/password` |
+| UC-04 | Save data (add category/item) | Home + Category page, `POST /api/categories`, `/items` |
+| UC-05 | Edit data | Edit button on cards, `PUT /api/categories/:id`, `/items/:id` |
+| UC-06 | Delete data | Delete + confirm, `DELETE /api/categories/:id`, `/items/:id` |
+| UC-07 | Search | Navbar search + within a category, `GET /api/items?q=` |
+| UC-08 | View stats | `/stats` page (Recharts), `GET /api/stats` |
+| UC-09 | Manage users (admin) | `/admin/users` page, `GET/POST/PUT/DELETE /api/admin/users` |
+| UC-10 | Manage system (admin) | `/admin/settings` page, `GET/PUT /api/admin/settings` |
+| (extra) | Favorites | `/favorites` page, `PATCH /api/items/:id/favorite` |
 
-## ความต้องการระบบ (Prerequisites)
-- Node.js 18+ และ npm
-- ฐานข้อมูล PostgreSQL — แนะนำ [Supabase](https://supabase.com) (ฟรี) หรือ Postgres ในเครื่อง
-- บัญชี Cloudinary (ฟรี) สำหรับเก็บรูปภาพ — ต้องมี cloud name, API key และ API secret
+## Prerequisites
+- Node.js 18+ and npm
+- A PostgreSQL database — [Supabase](https://supabase.com) (free) recommended, or local Postgres
+- A Cloudinary account (free) for image storage — you need the cloud name, API key, and API secret
 
-## การติดตั้งและรัน
+## Setup and run
 
 ### 1) Backend (`server/`)
 ```bash
 cd server
 npm install
-# แก้ server/.env -> ใส่ DATABASE_URL + DIRECT_URL (Supabase) และคีย์ Cloudinary
-npx prisma migrate dev   # สร้างตารางในฐานข้อมูล
-npm run seed             # ใส่บัญชีทดสอบ + ข้อมูลตัวอย่าง
-npm run dev              # API ที่ http://localhost:4000
+# Edit server/.env -> set DATABASE_URL + DIRECT_URL (Supabase) and the Cloudinary keys
+npx prisma migrate dev   # create the database tables
+npm run seed             # add test accounts + sample data
+npm run dev              # API at http://localhost:4000
 ```
 
-ตัวอย่าง `server/.env`:
+Example `server/.env`:
 ```
 DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres"
@@ -55,27 +55,27 @@ CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
 ```
 
-> Deploy ขึ้น production (Vercel + Render + Supabase) ดูขั้นตอนใน [DEPLOY.md](DEPLOY.md)
+> For production deployment (Vercel + Render + Supabase) see the steps in [DEPLOY.md](DEPLOY.md)
 
 ### 2) Frontend (`client/`)
 ```bash
 cd client
 npm install
-npm run dev              # เปิด http://localhost:5173
+npm run dev              # opens http://localhost:5173
 ```
-Vite จะ proxy `/api` ไปยัง backend (`:4000`) ให้อัตโนมัติ (ไม่ต้องตั้ง CORS ตอน dev); รูปภาพเสิร์ฟตรงจาก Cloudinary
+Vite proxies `/api` to the backend (`:4000`) automatically (no CORS setup needed in dev); images are served directly from Cloudinary.
 
-## บัญชีทดสอบ (จาก seed)
-| บทบาท | อีเมล | รหัสผ่าน |
+## Test accounts (from seed)
+| Role | Email | Password |
 |---|---|---|
 | Admin | `admin@demo.com` | `admin1234` |
 | User | `user@demo.com` | `user1234` |
 
-## โครงสร้างโปรเจกต์
+## Project structure
 ```
 server/
-  prisma/schema.prisma      # โมเดล User, Category, Item, SystemSetting
-  prisma/seed.js            # บัญชีทดสอบ + ข้อมูลตัวอย่าง + ค่าตั้งต้นระบบ
+  prisma/schema.prisma      # User, Category, Item, SystemSetting models
+  prisma/seed.js            # test accounts + sample data + default system settings
   src/
     app.js, server.js
     routes/ controllers/    # auth, users, categories, items, stats, admin
@@ -90,14 +90,14 @@ client/
     pages/                  # Login, Register, Home, Category, Favorites, Search, Stats, Profile, admin/*
 ```
 
-## คำสั่งที่มีให้
+## Available scripts
 **server:** `npm run dev` | `npm start` | `npm run migrate` | `npm run seed` | `npm run studio` (Prisma Studio) | `npm test`
 **client:** `npm run dev` | `npm run build` | `npm run preview` | `npm test`
 
-## หมายเหตุทางเทคนิค
-- ใช้ **Prisma 6** (ไม่ใช่ 7) เพราะ Prisma 7 บังคับใช้ `prisma.config.ts` + driver adapter ซึ่งไม่เหมาะกับโปรเจกต์ JavaScript ล้วน
-- ใช้ **Express 5** (req.query เป็น read-only — validate เก็บผลลง `req.validatedQuery`) และ **Zod 4**
-- ทุก query ผูกกับเจ้าของข้อมูล (owner-scoped) ผู้ใช้เห็นเฉพาะข้อมูลตัวเอง ยกเว้น admin
-- เก็บ JWT ใน `localStorage` แนบผ่าน axios interceptor; admin route ป้องกันด้วย `AdminRoute`
-- รูปภาพ (ไอเทม + avatar) เก็บบน **Cloudinary** — multer รับไฟล์แบบ memory แล้ว stream ขึ้น Cloudinary, เก็บ `public_id` ใน DB (`imagePublicId`/`avatarPublicId`) เพื่อใช้ลบรูปตอนเปลี่ยน/ลบ, ส่งมอบด้วย `f_auto/q_auto` ให้ optimize อัตโนมัติ
-- รองรับ **Login with Google** (Google Identity Services — ID token flow): frontend ส่ง credential ไป `POST /api/auth/google`, backend ตรวจด้วย `google-auth-library` แล้วออก JWT เอง; ลิงก์บัญชีอัตโนมัติด้วยอีเมล/สร้างบัญชีใหม่ให้ ต้องตั้ง `GOOGLE_CLIENT_ID` (server) + `VITE_GOOGLE_CLIENT_ID` (client)
+## Technical notes
+- Uses **Prisma 6** (not 7) because Prisma 7 forces a `prisma.config.ts` + driver adapter, which doesn't fit a plain-JavaScript project.
+- Uses **Express 5** (`req.query` is read-only — `validate` stores the parsed result in `req.validatedQuery`) and **Zod 4**.
+- Every query is owner-scoped; users only see their own data, except admins.
+- JWT is stored in `localStorage` and attached via an axios interceptor; admin routes are protected by `AdminRoute`.
+- Images (items + avatars) are stored on **Cloudinary** — multer receives files in memory then streams them to Cloudinary, the `public_id` is kept in the DB (`imagePublicId`/`avatarPublicId`) so images can be deleted on replace/remove, and they are delivered with `f_auto/q_auto` for automatic optimization.
+- Supports **Login with Google** (Google Identity Services — ID token flow): the frontend sends the credential to `POST /api/auth/google`, the backend verifies it with `google-auth-library` and issues its own JWT; accounts are auto-linked by email / created automatically. Requires `GOOGLE_CLIENT_ID` (server) + `VITE_GOOGLE_CLIENT_ID` (client).
