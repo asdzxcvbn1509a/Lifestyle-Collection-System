@@ -20,7 +20,8 @@ model User {
   id           Int        @id @default(autoincrement())
   email        String     @unique
   username     String     @unique
-  passwordHash String
+  passwordHash String? // null for Google-only accounts (no password)
+  googleId     String?    @unique // Google account "sub" when linked
   displayName  String?
   avatarUrl    String?
   avatarPublicId String?  // Cloudinary public_id, used to delete the asset on replace

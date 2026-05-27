@@ -100,3 +100,4 @@ client/
 - ทุก query ผูกกับเจ้าของข้อมูล (owner-scoped) ผู้ใช้เห็นเฉพาะข้อมูลตัวเอง ยกเว้น admin
 - เก็บ JWT ใน `localStorage` แนบผ่าน axios interceptor; admin route ป้องกันด้วย `AdminRoute`
 - รูปภาพ (ไอเทม + avatar) เก็บบน **Cloudinary** — multer รับไฟล์แบบ memory แล้ว stream ขึ้น Cloudinary, เก็บ `public_id` ใน DB (`imagePublicId`/`avatarPublicId`) เพื่อใช้ลบรูปตอนเปลี่ยน/ลบ, ส่งมอบด้วย `f_auto/q_auto` ให้ optimize อัตโนมัติ
+- รองรับ **Login with Google** (Google Identity Services — ID token flow): frontend ส่ง credential ไป `POST /api/auth/google`, backend ตรวจด้วย `google-auth-library` แล้วออก JWT เอง; ลิงก์บัญชีอัตโนมัติด้วยอีเมล/สร้างบัญชีใหม่ให้ ต้องตั้ง `GOOGLE_CLIENT_ID` (server) + `VITE_GOOGLE_CLIENT_ID` (client)

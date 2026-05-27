@@ -41,6 +41,9 @@ export async function changePassword(req, res) {
   const { currentPassword, newPassword } = req.body;
   const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 
+  if (!user.passwordHash) {
+    throw new AppError(400, 'บัญชีนี้ล็อกอินด้วย Google ยังไม่มีรหัสผ่าน');
+  }
   if (!(await comparePassword(currentPassword, user.passwordHash))) {
     throw new AppError(400, 'Current password is incorrect');
   }

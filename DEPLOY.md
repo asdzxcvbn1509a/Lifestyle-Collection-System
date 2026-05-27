@@ -78,6 +78,7 @@ git push -u origin main
    | `CLOUDINARY_CLOUD_NAME` | จาก Cloudinary |
    | `CLOUDINARY_API_KEY` | จาก Cloudinary |
    | `CLOUDINARY_API_SECRET` | จาก Cloudinary |
+   | `GOOGLE_CLIENT_ID` | OAuth Client ID (ดู "ตั้งค่า Google OAuth") — ข้ามได้ถ้าไม่ใช้ Google login |
 
    > ไม่ต้องตั้ง `PORT` — Render ฉีดให้เอง และ `server.js` อ่าน `process.env.PORT` อยู่แล้ว
 4. **Create Web Service** → รอ build เสร็จ → จด URL เช่น `https://lcs-api.onrender.com`
@@ -96,6 +97,7 @@ git push -u origin main
    | Key | Value |
    |---|---|
    | `VITE_API_URL` | `https://<backend>.onrender.com/api` (จากขั้น 4 — **ลงท้าย /api**) |
+   | `VITE_GOOGLE_CLIENT_ID` | OAuth Client ID เดียวกับฝั่ง backend — ข้ามได้ถ้าไม่ใช้ Google login |
 4. **Deploy** → จด URL เช่น `https://lcs.vercel.app`
 
 > ค่า `VITE_API_URL` ถูกฝังตอน build — ถ้าเปลี่ยนภายหลังต้อง **Redeploy** ฝั่ง Vercel ใหม่
@@ -108,11 +110,26 @@ git push -u origin main
 
 ---
 
+## ตั้งค่า Google OAuth (สำหรับ "Login with Google")
+ข้ามได้ถ้ายังไม่ใช้ Google login (ปุ่มจะไม่แสดงถ้าไม่ได้ตั้ง env)
+1. [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → **OAuth consent screen** → External → กรอกข้อมูลพื้นฐาน (เพิ่ม test users หรือ Publish)
+2. **Credentials → Create Credentials → OAuth client ID → Web application**
+3. **Authorized JavaScript origins** เพิ่ม:
+   - `http://localhost:5173` (dev)
+   - `https://lcs.vercel.app` (โดเมน Vercel จริง)
+   > ID-token/GSI flow ใช้แค่ JavaScript origins — **ไม่ต้องตั้ง redirect URI**
+4. คัดลอก **Client ID** → ใช้เป็น **ค่าเดียวกัน** ทั้ง:
+   - `GOOGLE_CLIENT_ID` บน Render (backend)
+   - `VITE_GOOGLE_CLIENT_ID` บน Vercel (frontend) → ตั้งแล้วต้อง **Redeploy Vercel**
+
+---
+
 ## ขั้น 7 — ทดสอบ production
 - เปิดโดเมน Vercel → ล็อกอินด้วยบัญชี seed: `admin@demo.com` / `admin1234` (หรือ `user@demo.com` / `user1234`)
 - สร้างไอเทมพร้อมรูป → รูปขึ้น Cloudinary และแสดงผล
 - ค้นหาด้วยตัวพิมพ์เล็ก เช่น `espre` → เจอ "Espresso" (ยืนยัน case-insensitive)
 - ลบไอเทม → รูปหายจาก Cloudinary Media Library
+- (ถ้าตั้ง Google) กดปุ่ม **Login with Google** → เข้าได้/สร้างบัญชีให้อัตโนมัติ
 
 ---
 
@@ -125,11 +142,13 @@ git push -u origin main
 | Render build fail ที่ `migrate deploy` | ไม่มีไฟล์ migration (ลืม commit ขั้น 2) หรือ `DIRECT_URL` ผิด/รหัสผ่าน DB ผิด |
 | `prisma migrate` ค้าง/ต่อ DB ไม่ได้ | ใช้ **DIRECT_URL (5432)** สำหรับ migrate ไม่ใช่ pooler 6543; ตรวจรหัสผ่านและ host pooler (IPv4) |
 | รูปอัปโหลดไม่ขึ้น | คีย์ `CLOUDINARY_*` บน Render ไม่ครบ/ผิด |
+| ปุ่ม Google ไม่ขึ้น | ยังไม่ได้ตั้ง `VITE_GOOGLE_CLIENT_ID` (ตั้งแล้วต้อง redeploy Vercel) |
+| Google ขึ้น error / popup ปิดทันที | โดเมนปัจจุบันไม่ได้อยู่ใน Authorized JavaScript origins หรือ `GOOGLE_CLIENT_ID` 2 ฝั่งไม่ตรงกัน |
 | ทุก request ช้าครั้งแรก | Render free tier หลับ — ปกติ หรืออัปเกรด/ใช้ cron ping |
 
 ---
 
 ## สรุป Environment Variables
-**Render (backend):** `DATABASE_URL`, `DIRECT_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+**Render (backend):** `DATABASE_URL`, `DIRECT_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_ORIGIN`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `GOOGLE_CLIENT_ID`
 
-**Vercel (frontend):** `VITE_API_URL`
+**Vercel (frontend):** `VITE_API_URL`, `VITE_GOOGLE_CLIENT_ID`

@@ -4,7 +4,7 @@ import { validate } from '../middleware/validate.js';
 import { requireAuth } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/rateLimit.js';
 import { asyncHandler } from '../lib/asyncHandler.js';
-import { register, login, me } from '../controllers/auth.controller.js';
+import { register, login, googleLogin, me } from '../controllers/auth.controller.js';
 
 const router = Router();
 
@@ -20,8 +20,13 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+const googleSchema = z.object({
+  credential: z.string().min(10),
+});
+
 router.post('/register', authLimiter, validate({ body: registerSchema }), asyncHandler(register));
 router.post('/login', authLimiter, validate({ body: loginSchema }), asyncHandler(login));
+router.post('/google', authLimiter, validate({ body: googleSchema }), asyncHandler(googleLogin));
 router.get('/me', requireAuth, asyncHandler(me));
 
 export default router;

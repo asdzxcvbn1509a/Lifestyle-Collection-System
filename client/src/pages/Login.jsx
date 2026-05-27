@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useAuth } from '@/auth/AuthContext';
 import AuthShell from '@/components/AuthShell';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -52,6 +53,7 @@ export default function Login() {
           {isSubmitting ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
         </button>
       </form>
+      <GoogleSignInButton />
       <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
         ยังไม่มีบัญชี?{' '}
         <Link to="/register" className="font-medium text-brand-600 hover:underline dark:text-brand-400">
